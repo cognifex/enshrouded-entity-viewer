@@ -1,0 +1,5 @@
+viewer/index.html
+viewer/*.json
+viewer/*-shards/
+viewer/run*/
+viewer/data*
