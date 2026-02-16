@@ -86,6 +86,7 @@ Behavior:
 - Single‑file mode: writes one JSON at `-OutPath`.
 - Shard mode: creates a shard directory with `meta.json` and numbered `entities-*.json`. If `-OutPath` is an existing file, the writer creates `<basename>-shards` alongside it to avoid collisions.
 - Progress: periodic progress updates and a summary of chunks/entities/shards.
+- Security: exported `chunks[].path` and `templates[].path` values are redacted as `[REDACTED_PATH]` to avoid leaking local filesystem paths.
 
 ### `scripts/render-viewer.ps1`
 Parameters:
