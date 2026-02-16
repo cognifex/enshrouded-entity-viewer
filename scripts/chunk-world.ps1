@@ -24,6 +24,11 @@ function Find-FirstFile($dir, $pattern){
   return $f.FullName
 }
 
+function Redact-Path([string]$path){
+  if([string]::IsNullOrWhiteSpace($path)){ return $null }
+  return '[REDACTED_PATH]'
+}
+
 # Discover world grid size from SceneResource or VoxelWorldResource
 $sceneResDir = Join-Path $UnpackedRoot 'SceneResource'
 $voxelWorldResDir = Join-Path $UnpackedRoot 'VoxelWorldResource'
@@ -84,7 +89,7 @@ function Get-TemplateInfo([string]$guid){
     $tj = Get-Json $path
     if($tj -and ($tj.PSObject.Properties.Name -contains 'name')){ $name = $tj.name }
   }
-  $info = [PSCustomObject]@{ guid=$guid; name=$name; path=$path }
+  $info = [PSCustomObject]@{ guid=$guid; name=$name; path=(Redact-Path $path) }
   $templateCache[$guid] = $info
   return $info
 }
@@ -170,7 +175,7 @@ if($Parallel){
       [void]$entsOut.Add($obj)
     }
     [PSCustomObject]@{
-      chunk = [PSCustomObject]@{ part=$part; layer=$layer; tileX=$tileX; tileY=$tileY; entityCount=$chunkEntCount; path=$_.FullName }
+      chunk = [PSCustomObject]@{ part=$part; layer=$layer; tileX=$tileX; tileY=$tileY; entityCount=$chunkEntCount; path=(Redact-Path $_.FullName) }
       entities = $entsOut
     }
   } -ThrottleLimit $ThrottleLimit | ForEach-Object {
@@ -199,7 +204,7 @@ if($Parallel){
     $entArr = @(); if($j.entities){ $entArr = $j.entities }
     $tmplArr = @(); if($j.templates){ $tmplArr = $j.templates }
     $chunkEntCount = ($entArr | Measure-Object).Count
-    [void]$chunks.Add([PSCustomObject]@{ part=$part; layer=$layer; tileX=$tileX; tileY=$tileY; entityCount=$chunkEntCount; path=$cf.FullName })
+    [void]$chunks.Add([PSCustomObject]@{ part=$part; layer=$layer; tileX=$tileX; tileY=$tileY; entityCount=$chunkEntCount; path=(Redact-Path $cf.FullName) })
     if($chunkEntCount -eq 0){ continue }
     $take = [Math]::Min($MaxEntitiesPerChunk, $chunkEntCount)
     for($i=0; $i -lt $take; $i++){
