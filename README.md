@@ -1,6 +1,3 @@
-# EEV — Enshrouded Entity Viewer (PowerShell)
-
-[English](README.en.md)
 Ein schneller, lokaler Viewer für **Enshrouded**-Welten.
 Das Projekt verarbeitet bereits entpackte Spieldaten (Entities + Metadaten) und erzeugt daraus eine interaktive, eigenständige `viewer/index.html`.
 
